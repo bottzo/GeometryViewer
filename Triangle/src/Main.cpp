@@ -34,15 +34,18 @@ int main() {
 	glfwWindowHint(GLFW_VERSION_MINOR, 6);
 	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	GLFWwindow* window = glfwCreateWindow(640, 480,"GLFWwindow", NULL, NULL);
-	if (window == NULL)
+	if (window == NULL || glewInit() != GLEW_OK)
 	{
 		glfwTerminate();
 		return -1;
 	}
 	glfwSetFramebufferSizeCallback(window, ResizeFramebufferCb);
 
+	glViewport(0, 0, 640, 480);
+	glClearColor(1.f, 1.f, 1.f, 1.f);
 	while (!glfwWindowShouldClose(window))
 	{
+		glClear(GL_COLOR_BUFFER_BIT);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
