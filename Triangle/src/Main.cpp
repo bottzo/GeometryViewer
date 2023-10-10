@@ -1,5 +1,6 @@
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
+#include "GL/glew.h"
 
 
 //TODO: Subsystem window
@@ -16,6 +17,9 @@
 //https://stackoverflow.com/questions/49371475/how-does-opengl32-lib-work-on-windowsjust-version-1-1-does-it-actually-implem
 
 
+void ResizeFramebufferCb(GLFWwindow* window, int w, int h) {
+	glViewport(0, 0, w, h);
+}
 
 //https://learnopengl.com/Getting-started/Hello-Window
 int main() {
@@ -26,18 +30,22 @@ int main() {
 		return 0;
 	}
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-	GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
+	glfwWindowHint(GLFW_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_VERSION_MINOR, 6);
+	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	GLFWwindow* window = glfwCreateWindow(640, 480,"GLFWwindow", NULL, NULL);
 	if (window == NULL)
 	{
 		glfwTerminate();
 		return -1;
 	}
-	glfwMakeContextCurrent(window);
+	glfwSetFramebufferSizeCallback(window, ResizeFramebufferCb);
 
+	while (!glfwWindowShouldClose(window))
+	{
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+	}
 	glfwTerminate();
 	return 0;
 }
