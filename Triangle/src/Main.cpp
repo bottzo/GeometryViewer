@@ -30,19 +30,31 @@ int main() {
 		return 0;
 	}
 
-	glfwWindowHint(GLFW_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_VERSION_MINOR, 6);
-	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	GLFWwindow* window = glfwCreateWindow(640, 480,"GLFWwindow", NULL, NULL);
-	if (window == NULL || glewInit() != GLEW_OK)
+	const char** err = nullptr;
+	int a = glfwGetError(err);
+	if (window == NULL)
+	{
+		glfwTerminate();
+		return -1;
+	}
+	glfwMakeContextCurrent(window);
+	if (glewInit() != GLEW_OK)
 	{
 		glfwTerminate();
 		return -1;
 	}
 	glfwSetFramebufferSizeCallback(window, ResizeFramebufferCb);
 
-	glViewport(0, 0, 640, 480);
-	glClearColor(1.f, 1.f, 1.f, 1.f);
+	int w = 0;
+	int h = 0;
+	glfwGetFramebufferSize(window, &w, &h);
+	//glfwGetFramebufferSize(window, 640, 480);
+	glViewport(0, 0, w, h);
+	glClearColor(0.f, 0.f, 0.5f, 1.f);
 	while (!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
