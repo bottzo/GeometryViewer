@@ -53,11 +53,75 @@ int main() {
 	int h = 0;
 	glfwGetFramebufferSize(window, &w, &h);
 	//glfwGetFramebufferSize(window, 640, 480);
+
+
 	glViewport(0, 0, w, h);
 	glClearColor(0.f, 0.f, 0.5f, 1.f);
+
+
+	int shaderErr = 0;
+	char log[500];
+	unsigned int vShader = glCreateShader(GL_VERTEX_SHADER);
+	const char* vShaderSource = "#version 460 core\nlayout(location = 0) in vec3 pos;\nvoid main(){\ngl_Position = vec4(pos, 1.0f);\n}";
+	glShaderSource(vShader, 1, &vShaderSource, NULL);
+	glCompileShader(vShader);
+	glGetShaderiv(vShader, GL_COMPILE_STATUS, &shaderErr);
+	if (shaderErr == GL_FALSE)
+	{
+		glGetShaderInfoLog(vShader, 500*sizeof(char), NULL, log);
+		glfwTerminate();
+		return 0;
+	}
+	unsigned int fShader = glCreateShader(GL_FRAGMENT_SHADER);
+	const char* fShaderSource = "#version 460 core\nin vec4 gl_FragCoord;\nout vec4 diffuseColor;\nvoid main(){\ndiffuseColor = vec4(0.1f, 0.9f, 0.1f, 1.0f);\n}";
+	glShaderSource(fShader, 1, &fShaderSource, NULL);
+	glCompileShader(fShader);
+	glGetShaderiv(fShader, GL_COMPILE_STATUS, &shaderErr);
+	if (shaderErr == GL_FALSE)
+	{
+		glGetShaderInfoLog(fShader, 500 * sizeof(char), NULL, log);
+		glfwTerminate();
+		return 0;
+	}
+	unsigned int programId = glCreateProgram();
+	glAttachShader(programId, vShader);
+	glAttachShader(programId, fShader);
+	glLinkProgram(programId);
+	glGetProgramiv(programId, GL_LINK_STATUS, &shaderErr);
+	if (shaderErr == GL_FALSE)
+	{
+		glfwTerminate();
+		return 0;
+	}
+
+	float vertex[] = {
+	-0.5f, -0.5f, 0.0f,
+	 0.5f, -0.5f, 0.0f,
+	 0.0f,  0.5f, 0.0f
+	};
+	unsigned int VBO;
+	//glCreateBuffers(1, &VBO);
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertex), vertex, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), 0);
+	glEnableVertexAttribArray(0);
+	glUseProgram(programId);
+
+
 	while (!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertex), vertex, GL_STATIC_DRAW);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+		glEnableVertexAttribArray(0);
+		glUseProgram(programId);
+
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
