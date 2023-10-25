@@ -1,6 +1,11 @@
 #define GLFW_INCLUDE_NONE
+#define _CRT_SECURE_NO_WARNINGS
 #include "GLFW/glfw3.h"
 #include "GL/glew.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <windows.h>
 
 
 //TODO: Subsystem window
@@ -16,9 +21,11 @@
 //opengl32.lib just needed for the 1.1 version functions
 //https://stackoverflow.com/questions/49371475/how-does-opengl32-lib-work-on-windowsjust-version-1-1-does-it-actually-implem
 
-
+unsigned int programId = 0;
 void ResizeFramebufferCb(GLFWwindow* window, int w, int h) {
 	glViewport(0, 0, w, h);
+	glUseProgram(programId);
+	glUniform2f(glGetUniformLocation(programId, "resolution"), (float)w, (float)h);
 }
 
 //https://learnopengl.com/Getting-started/Hello-Window
@@ -59,6 +66,7 @@ int main() {
 	char log[500];
 	unsigned int vShader = glCreateShader(GL_VERTEX_SHADER);
 	const char* vShaderSource = "#version 460 core\nlayout(location = 0) in vec3 pos;\nlayout(location = 1) in vec3 inCol;\nout vec3 col;\nvoid main(){\ncol=inCol;\ngl_Position = vec4(pos, 1.0f);\n}";
+	//const char* vShaderSource = "#version 460\nvoid main(void){\n}";
 	glShaderSource(vShader, 1, &vShaderSource, NULL);
 	glCompileShader(vShader);
 	glGetShaderiv(vShader, GL_COMPILE_STATUS, &shaderErr);
@@ -69,17 +77,35 @@ int main() {
 		return 0;
 	}
 	unsigned int fShader = glCreateShader(GL_FRAGMENT_SHADER);
-	const char* fShaderSource = "#version 460 core\nin vec3 col; out vec4 fragColor;\nvoid main(){\nfragColor = vec4(col, 1.0f);\n}";
-	glShaderSource(fShader, 1, &fShaderSource, NULL);
+	//const char* fShaderSource = "#version 460 core\nin vec3 col; out vec4 fragColor;\nvoid main(){\nfragColor = vec4(col, 1.0f);\n}";
+	FILE* file = fopen("Shaders/Mandelbrot.glsl", "rb");
+	if (file == NULL)
+	{
+		glfwTerminate();
+		return 0;
+	}
+	fseek(file, 0, SEEK_END);
+	int size = ftell(file);
+	char* data = (char*)malloc(size + 1);
+	fseek(file, 0, SEEK_SET);
+	fread(data, 1, size, file);
+	data[size] = '\0';
+	fclose(file);
+
+	//const char* fShaderSource = "#version 460 core\nin vec3 col; out vec4 fragColor;\nvoid main(){\nfragColor = vec4(col, 1.0f);\n}";
+	glShaderSource(fShader, 1, &data, NULL);
+	free(data);
 	glCompileShader(fShader);
 	glGetShaderiv(fShader, GL_COMPILE_STATUS, &shaderErr);
 	if (shaderErr == GL_FALSE)
 	{
 		glGetShaderInfoLog(fShader, 500 * sizeof(char), NULL, log);
+		OutputDebugStringA(log);
 		glfwTerminate();
 		return 0;
 	}
-	unsigned int programId = glCreateProgram();
+	//unsigned int programId = glCreateProgram();
+	programId = glCreateProgram();
 	glAttachShader(programId, vShader);
 	glAttachShader(programId, fShader);
 	glLinkProgram(programId);
@@ -91,7 +117,7 @@ int main() {
 		return 0;
 	}
 	glUseProgram(programId);
-	glUniform2ui(glGetUniformLocation(programId, "resolution"), w, h);
+	glUniform2f(glGetUniformLocation(programId, "resolution"), (float)w, (float)h);
 
 	float vertex[] = {
 	-1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
