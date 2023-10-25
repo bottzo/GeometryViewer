@@ -7,7 +7,7 @@ const vec3 col2 = vec3(1.0, 1.0, 0.f);
 uniform vec2 resolution;
 
 out vec4 fragColor;
-in vec2 gl_FragCoord;
+in vec4 gl_FragCoord;
 
 void main()
 {
