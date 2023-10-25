@@ -90,6 +90,8 @@ int main() {
 		glfwTerminate();
 		return 0;
 	}
+	glUseProgram(programId);
+	glUniform2ui(glGetUniformLocation(programId, "resolution"), w, h);
 
 	float vertex[] = {
 	-1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
