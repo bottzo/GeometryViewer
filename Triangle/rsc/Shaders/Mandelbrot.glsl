@@ -5,6 +5,8 @@ const vec3 col1 = vec3(1.f, 0, 0);
 const vec3 col2 = vec3(1.0, 1.0, 0.f);
 
 uniform vec2 resolution;
+uniform vec2 offset;
+uniform float zoom;
 
 out vec4 fragColor;
 in vec4 gl_FragCoord;
@@ -12,7 +14,8 @@ in vec4 gl_FragCoord;
 void main()
 {
 	vec2 C = ((gl_FragCoord.xy / resolution) * 2) - 1;
-	C.x -= 0.55f;
+	C += offset;
+	C *= zoom;
 	vec2 z = vec2(0,0);
 	
 	float rSquare = 0;

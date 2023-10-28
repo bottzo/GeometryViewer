@@ -117,7 +117,12 @@ int main() {
 		return 0;
 	}
 	glUseProgram(programId);
+	float offsetX = -0.55f;
+	float offsetY = 0.0f;
+	float zoom = 1.0f;
 	glUniform2f(glGetUniformLocation(programId, "resolution"), (float)w, (float)h);
+	glUniform2f(glGetUniformLocation(programId, "offset"), (float)offsetX, (float)offsetY);
+	glUniform1f(glGetUniformLocation(programId, "zoom"), (float)zoom);
 
 	float vertex[] = {
 	-1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
@@ -149,6 +154,18 @@ int main() {
 
 	while (!glfwWindowShouldClose(window))
 	{
+		if (glfwGetKey(window, GLFW_KEY_A == GLFW_PRESS))
+		{
+			zoom -= 0.01f;
+			glUniform1f(glGetUniformLocation(programId, "zoom"), zoom);
+		}
+		if (glfwGetKey(window, GLFW_KEY_S == GLFW_PRESS))
+		{
+			zoom += 0.01f;
+			glUniform1f(glGetUniformLocation(programId, "zoom"), zoom);
+		}
+
+		
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glBindVertexArray(VAO);
