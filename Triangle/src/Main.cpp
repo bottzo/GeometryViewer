@@ -154,17 +154,36 @@ int main() {
 
 	while (!glfwWindowShouldClose(window))
 	{
-		if (glfwGetKey(window, GLFW_KEY_A == GLFW_PRESS))
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 		{
 			zoom -= 0.01f;
 			glUniform1f(glGetUniformLocation(programId, "zoom"), zoom);
 		}
-		if (glfwGetKey(window, GLFW_KEY_S == GLFW_PRESS))
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 		{
 			zoom += 0.01f;
 			glUniform1f(glGetUniformLocation(programId, "zoom"), zoom);
 		}
-
+		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+		{
+			offsetX += 0.01f;
+			glUniform2f(glGetUniformLocation(programId, "offset"), (float)offsetX, (float)offsetY);
+		}
+		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+		{
+			offsetX -= 0.01f;
+			glUniform2f(glGetUniformLocation(programId, "offset"), (float)offsetX, (float)offsetY);
+		}
+		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+		{
+			offsetY += 0.01f;
+			glUniform2f(glGetUniformLocation(programId, "offset"), (float)offsetX, (float)offsetY);
+		}
+		if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+		{
+			offsetY -= 0.01f;
+			glUniform2f(glGetUniformLocation(programId, "offset"), (float)offsetX, (float)offsetY);
+		}
 		
 		glClear(GL_COLOR_BUFFER_BIT);
 
