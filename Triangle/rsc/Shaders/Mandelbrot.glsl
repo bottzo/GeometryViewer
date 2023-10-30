@@ -4,7 +4,7 @@ const vec3 col2 = vec3(1.0, 1.0, 0.f);
 
 uniform uint maxIterations;
 uniform uint colorPeriod;
-uniform vec2 resolution;
+uniform ivec2 resolution;
 uniform float cLength;
 uniform vec2 center;
 

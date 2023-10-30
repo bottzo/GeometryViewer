@@ -25,7 +25,7 @@ unsigned int programId = 0;
 void ResizeFramebufferCb(GLFWwindow* window, int w, int h) {
 	glViewport(0, 0, w, h);
 	glUseProgram(programId);
-	glUniform2f(glGetUniformLocation(programId, "resolution"), (float)w, (float)h);
+	glUniform2i(glGetUniformLocation(programId, "resolution"), w, h);
 }
 
 typedef struct {
@@ -169,7 +169,7 @@ int main() {
 	Uniforms unis = { 24, 1000 };
 	glUniform1ui(glGetUniformLocation(programId, "colorPeriod"), unis.colorPeriod);
 	glUniform1ui(glGetUniformLocation(programId, "maxIterations"), unis.maxIterations);
-	glUniform2f(glGetUniformLocation(programId, "resolution"), (float)w, (float)h);
+	glUniform2i(glGetUniformLocation(programId, "resolution"), w, h);
 	glUniform2f(glGetUniformLocation(programId, "center"), centerX, centerY);
 	glUniform1f(glGetUniformLocation(programId, "cLength"), cLength);
 	glfwSetWindowUserPointer(window, &unis);
