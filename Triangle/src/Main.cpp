@@ -163,15 +163,15 @@ int main() {
 		return 0;
 	}
 	glUseProgram(programId);
-	float centerX = -0.55f;
-	float centerY = 0.0f;
-	float cLength = 2.0f;
+	double centerX = -0.55;
+	double centerY = 0.0;
+	double cLength = 2.0;
 	Uniforms unis = { 24, 1000 };
 	glUniform1ui(glGetUniformLocation(programId, "colorPeriod"), unis.colorPeriod);
 	glUniform1ui(glGetUniformLocation(programId, "maxIterations"), unis.maxIterations);
 	glUniform2i(glGetUniformLocation(programId, "resolution"), w, h);
-	glUniform2f(glGetUniformLocation(programId, "center"), centerX, centerY);
-	glUniform1f(glGetUniformLocation(programId, "cLength"), cLength);
+	glUniform2d(glGetUniformLocation(programId, "center"), centerX, centerY);
+	glUniform1d(glGetUniformLocation(programId, "cLength"), cLength);
 	glfwSetWindowUserPointer(window, &unis);
 	glfwSetKeyCallback(window, KeyCallback);
 
@@ -207,33 +207,33 @@ int main() {
 	{
 		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 		{
-			cLength *= 0.99f;
-			glUniform1f(glGetUniformLocation(programId, "cLength"), cLength);
+			cLength *= 0.99;
+			glUniform1d(glGetUniformLocation(programId, "cLength"), cLength);
 		}
 		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 		{
-			cLength *= 1.01f;
-			glUniform1f(glGetUniformLocation(programId, "cLength"), cLength);
+			cLength *= 1.01;
+			glUniform1d(glGetUniformLocation(programId, "cLength"), cLength);
 		}
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 		{
-			centerX += 0.01f * cLength;
-			glUniform2f(glGetUniformLocation(programId, "center"), (float)centerX, (float)centerY);
+			centerX += 0.01 * cLength;
+			glUniform2d(glGetUniformLocation(programId, "center"), centerX, centerY);
 		}
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 		{
-			centerX -= 0.01f * cLength;
-			glUniform2f(glGetUniformLocation(programId, "center"), (float)centerX, (float)centerY);
+			centerX -= 0.01 * cLength;
+			glUniform2d(glGetUniformLocation(programId, "center"), centerX, centerY);
 		}
 		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
 		{
-			centerY += 0.01f * cLength;
-			glUniform2f(glGetUniformLocation(programId, "center"), (float)centerX, (float)centerY);
+			centerY += 0.01 * cLength;
+			glUniform2d(glGetUniformLocation(programId, "center"), centerX, centerY);
 		}
 		if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 		{
-			centerY -= 0.01f * cLength;
-			glUniform2f(glGetUniformLocation(programId, "center"), (float)centerX, (float)centerY);
+			centerY -= 0.01 * cLength;
+			glUniform2d(glGetUniformLocation(programId, "center"), centerX, centerY);
 		}
 		
 		glClear(GL_COLOR_BUFFER_BIT);
