@@ -166,7 +166,7 @@ int main() {
 	float centerX = -0.55f;
 	float centerY = 0.0f;
 	float cLength = 2.0f;
-	Uniforms unis = { 24, 1 };
+	Uniforms unis = { 24, 1000 };
 	glUniform1ui(glGetUniformLocation(programId, "colorPeriod"), unis.colorPeriod);
 	glUniform1ui(glGetUniformLocation(programId, "maxIterations"), unis.maxIterations);
 	glUniform2f(glGetUniformLocation(programId, "resolution"), (float)w, (float)h);
