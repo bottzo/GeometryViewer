@@ -28,6 +28,52 @@ void ResizeFramebufferCb(GLFWwindow* window, int w, int h) {
 	glUniform2f(glGetUniformLocation(programId, "resolution"), (float)w, (float)h);
 }
 
+typedef struct {
+	unsigned int colorPeriod;
+	unsigned int maxIterations;
+} Uniforms;
+
+void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	Uniforms* ptr = (Uniforms*)glfwGetWindowUserPointer(window);
+	if (key == GLFW_KEY_Q && action == GLFW_PRESS)
+	{
+		ptr->colorPeriod += 1;
+		glUniform1ui(glGetUniformLocation(programId, "colorPeriod"), ptr->colorPeriod);
+	}
+	if (key == GLFW_KEY_W && action == GLFW_PRESS)
+	{
+		ptr->colorPeriod -= 1;
+		glUniform1ui(glGetUniformLocation(programId, "colorPeriod"), ptr->colorPeriod);
+	}
+	if (key == GLFW_KEY_Z && action == GLFW_PRESS)
+	{
+		ptr->maxIterations += 1;
+		glUniform1ui(glGetUniformLocation(programId, "maxIterations"), ptr->maxIterations);
+	}
+	if (key == GLFW_KEY_X && action == GLFW_PRESS)
+	{
+		if (ptr->maxIterations > 0)
+			ptr->maxIterations -= 1;
+		else
+			ptr->maxIterations = 0;
+		glUniform1ui(glGetUniformLocation(programId, "maxIterations"), ptr->maxIterations);
+	}
+	if (key == GLFW_KEY_C && action == GLFW_PRESS)
+	{
+		ptr->maxIterations += 100;
+		glUniform1ui(glGetUniformLocation(programId, "maxIterations"), ptr->maxIterations);
+	}
+	if (key == GLFW_KEY_V && action == GLFW_PRESS)
+	{
+		if (ptr->maxIterations > 0)
+			ptr->maxIterations -= 100;
+		else
+			ptr->maxIterations = 0;
+		glUniform1ui(glGetUniformLocation(programId, "maxIterations"), ptr->maxIterations);
+	}
+}
+
 //https://learnopengl.com/Getting-started/Hello-Window
 int main() {
 	if (!glfwInit())
@@ -120,9 +166,14 @@ int main() {
 	float centerX = -0.55f;
 	float centerY = 0.0f;
 	float cLength = 2.0f;
+	Uniforms unis = { 24, 1 };
+	glUniform1ui(glGetUniformLocation(programId, "colorPeriod"), unis.colorPeriod);
+	glUniform1ui(glGetUniformLocation(programId, "maxIterations"), unis.maxIterations);
 	glUniform2f(glGetUniformLocation(programId, "resolution"), (float)w, (float)h);
-	glUniform2f(glGetUniformLocation(programId, "center"), (float)centerX, (float)centerY);
-	glUniform1f(glGetUniformLocation(programId, "cLength"), (float)cLength);
+	glUniform2f(glGetUniformLocation(programId, "center"), centerX, centerY);
+	glUniform1f(glGetUniformLocation(programId, "cLength"), cLength);
+	glfwSetWindowUserPointer(window, &unis);
+	glfwSetKeyCallback(window, KeyCallback);
 
 	float vertex[] = {
 	-1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f,

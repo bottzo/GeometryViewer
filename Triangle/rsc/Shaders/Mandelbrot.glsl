@@ -1,9 +1,11 @@
 #version 460
-const uint maxIterations = 1000;
-const uint colorPeriod = 24u;
+//const uint maxIterations = 1000;
+//const uint colorPeriod = 24u;
 const vec3 col1 = vec3(1.f, 0, 0);
 const vec3 col2 = vec3(1.0, 1.0, 0.f);
 
+uniform uint maxIterations = 1000;
+uniform uint colorPeriod;
 uniform vec2 resolution;
 uniform float cLength;
 uniform vec2 center;
