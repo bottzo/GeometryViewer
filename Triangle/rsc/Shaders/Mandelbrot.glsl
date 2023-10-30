@@ -1,21 +1,20 @@
 #version 460
-const uint maxIterations = 10000;
+const uint maxIterations = 1000;
 const uint colorPeriod = 24u;
 const vec3 col1 = vec3(1.f, 0, 0);
 const vec3 col2 = vec3(1.0, 1.0, 0.f);
 
 uniform vec2 resolution;
-uniform vec2 offset;
-uniform float zoom;
+uniform float cLength;
+uniform vec2 center;
 
 out vec4 fragColor;
 in vec4 gl_FragCoord;
 
 void main()
 {
-	vec2 C = ((gl_FragCoord.xy / resolution) * 2) - 1;
-	C += offset;
-	C *= zoom;
+	const vec2 inc = cLength / resolution;
+	vec2 C = (center - cLength * 0.5) + (gl_FragCoord.xy * inc); 
 	vec2 z = vec2(0,0);
 	
 	float rSquare = 0;
